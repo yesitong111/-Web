@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>流水线3D模型展示</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+		<style>
+			body {
+				overflow: hidden;
+				margin: 0px;
+				padding: 0;
+				width: 100%;
+				height: 100vh;
+			}
+			#canvas-container {
+				width: 100%;
+				height: 100vh;
+				position: relative;
+			}
+			canvas {
+				display: block;
+				width: 100%;
+				height: 100%;
+			}
+			.controls-overlay {
+				position: absolute;
+				top: 20px;
+				right: 20px;
+				z-index: 1000;
+				display: flex;
+				flex-direction: column;
+				gap: 10px;
+			}
+			.animation-panel {
+				position: absolute;
+				bottom: 20px;
+				left: 20px;
+				z-index: 1000;
+				background: rgba(42, 42, 42, 0.95);
+				backdrop-filter: blur(10px);
+				border-radius: 15px;
+				padding: 20px;
+				box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+				border: 1px solid rgba(255, 255, 255, 0.1);
+				min-width: 280px;
+			}
+			.panel-title {
+				color: #ffffff;
+				font-size: 16px;
+				font-weight: 600;
+				margin-bottom: 15px;
+				text-align: center;
+				text-transform: uppercase;
+				letter-spacing: 1px;
+			}
+			.control-btn {
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				border: none;
+				color: white;
+				padding: 10px 16px;
+				border-radius: 8px;
+				cursor: pointer;
+				font-size: 13px;
+				font-weight: 600;
+				margin: 5px;
+				transition: all 0.3s ease;
+				text-transform: uppercase;
+				letter-spacing: 0.5px;
+				min-width: 70px;
+			}
+			.control-btn:hover {
+				transform: translateY(-1px);
+				box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+			}
+			.control-btn.stop {
+				background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+			}
+			.control-btn.stop:hover {
+				box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+			}
+			.control-btn.reset {
+				background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+			}
+			.control-btn.reset:hover {
+				box-shadow: 0 4px 15px rgba(78, 205, 196, 0.4);
+			}
+			.status-indicator {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin: 10px 0;
+				gap: 10px;
+			}
+			.status-dot {
+				width: 10px;
+				height: 10px;
+				border-radius: 50%;
+				background: #ff6b6b;
+				animation: pulse 2s infinite;
+			}
+			.status-dot.running {
+				background: #4ecdc4;
+			}
+			@keyframes pulse {
+				0% { opacity: 1; }
+				50% { opacity: 0.5; }
+				100% { opacity: 1; }
+			}
+			.status-text {
+				color: #ffffff;
+				font-size: 12px;
+				font-weight: 500;
+			}
+			.speed-control {
+				margin: 15px 0;
+			}
+			.speed-label {
+				color: #ffffff;
+				font-size: 12px;
+				margin-bottom: 5px;
+			}
+			.speed-slider {
+				width: 100%;
+				height: 6px;
+				border-radius: 3px;
+				background: #333;
+				outline: none;
+				-webkit-appearance: none;
+			}
+			.speed-slider::-webkit-slider-thumb {
+				-webkit-appearance: none;
+				appearance: none;
+				width: 18px;
+				height: 18px;
+				border-radius: 50%;
+				background: #667eea;
+				cursor: pointer;
+			}
+		</style>
+		
+	</head>
+	<body>
+		<div id="canvas-container">
+			<div class="controls-overlay">
+			</div>
+			
+			<div class="animation-panel">
+				<div class="panel-title">🏭 设备控制面板</div>
+				
+				<div class="status-indicator">
+					<div class="status-dot" id="statusDot"></div>
+					<span class="status-text" id="statusText">设备已停止</span>
+				</div>
+				
+				<div style="text-align: center;">
+					<button class="control-btn" onclick="playAnimation()">
+						▶️ 运行
+					</button>
+					<button class="control-btn stop" onclick="stopAnimation()">
+						⏹️ 停止
+					</button>
+					<button class="control-btn reset" onclick="restartAnimation()">
+						🔄 重来
+					</button>
+					<button class="control-btn reset" onclick="resetView()">
+						🔄 复位视角
+					</button>
+				</div>
+				
+				<div class="speed-control">
+					<div class="speed-label">动画速度: <span id="speedValue">1.0</span>x</div>
+					<input type="range" class="speed-slider" id="speedSlider" 
+						   min="0.1" max="3" step="0.1" value="1.0" 
+						   onchange="updateSpeed(this.value)">
+				</div>
+			</div>
+		</div>
+		
+		<script type="importmap">
+			{
+				"imports":{
+					"three":"./three.js/three.js-r179/build/three.module.js",
+					"three/addons/":"./three.js/three.js-r179/examples/jsm/"
+				}
+			}
+		</script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+		<script type='module' src='index.js' ></script>
+
+	</body>
+</html>
